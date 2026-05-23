@@ -1,0 +1,16 @@
+{
+  "name": "bitcoin-blockchain-game",
+  "version": "1.0.0",
+  "description": "Educational Bitcoin Blockchain Game for My First Bitcoin Community",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["bitcoin", "blockchain", "education", "game"],
+  "author": "My First Bitcoin Node, BTC Curacao Institute, Family Peter Kroll",
+  "license": "MIT"
+}

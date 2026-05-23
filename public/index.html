@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌴 Bitcoin Blockchain Island Game 🪙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #f7931a, #ffb347);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            margin-bottom: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #f7931a, #ffb347);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 30px;
+            min-height: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .output-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #f7931a, #ffb347);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(247, 147, 26, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .hash-display {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin: 10px 0;
+            border: 2px solid #333;
+        }
+
+        .transaction-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nonce-display {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .winner-message {
+            background: linear-gradient(45deg, #00b09b, #96c93d);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+            animation: celebrate 1s ease infinite alternate;
+        }
+
+        .winner-message.show {
+            display: block;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .block-chain {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .block {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            margin: 0 10px;
+            text-align: center;
+        }
+
+        .arrow {
+            font-size: 30px;
+            color: #f7931a;
+            font-weight: bold;
+        }
+
+        h2, h3 {
+            color: #333;
+            margin: 20px 0 10px 0;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌴 Bitcoin Blockchain Island Game 🪙</h1>
+        <div class="subtitle">Learn how Bitcoin blocks work - the fun way!</div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab(1)">🔤 Hash Text</div>
+            <div class="tab" onclick="showTab(2)">💸 Hash Transactions</div>
+            <div class="tab" onclick="showTab(3)">🎲 Nonce Magic</div>
+            <div class="tab" onclick="showTab(4)">⛏️ Mine Block</div>
+            <div class="tab" onclick="showTab(5)">⛓️ Block Chain</div>
+        </div>
+
+        <!-- Tab 1: Hash Text -->
+        <div id="tab1" class="tab-content active">
+            <h2>🔤 Text Hashing Adventure</h2>
+            <p>Type any text and see how SHA256 creates a unique "fingerprint" hash!</p>
+            
+            <div class="input-section">
+                <h3>✍️ Your Text:</h3>
+                <input type="text" id="textInput" placeholder="Type anything here..." onkeyup="hashText()">
+            </div>
+
+            <div class="output-section">
+                <h3>🔐 SHA256 Hash:</h3>
+                <div id="textHash" class="hash-display">Type something above to see the magic happen!</div>
+            </div>
+
+            <div class="card">
+                <h3>🤔 What's happening?</h3>
+                <p>SHA256 always creates the same hash for the same input. Change even one letter and the whole hash changes completely! This is how Bitcoin ensures security.</p>
+            </div>
+        </div>
+
+        <!-- Tab 2: Hash Transactions -->
+        <div id="tab2" class="tab-content">
+            <h2>💸 Transaction Hashing</h2>
+            <p>See how Bitcoin transactions get hashed into blocks!</p>
+
+            <div class="transaction-box">
+                <h3>🏫 Block 1 Transactions:</h3>
+                <div>Instructor → Student 1: 50 BTC (fee: 0.5 BTC)</div>
+                <div>Student 2 → Student 6: 40 BTC (fee: 0.8 BTC)</div>
+                <div>Miner reward: 3.125 BTC</div>
+            </div>
+
+            <button class="btn" onclick="hashTransactions()">🔐 Hash This Block!</button>
+
+            <div class="output-section">
+                <h3>📋 Block Data:</h3>
+                <div id="transactionData" class="hash-display">Click the button above to see the block data!</div>
+                <h3>🔐 Block Hash:</h3>
+                <div id="transactionHash" class="hash-display">Block hash will appear here!</div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Nonce Magic -->
+        <div id="tab3" class="tab-content">
+            <h2>🎲 The Magic of Nonce</h2>
+            <p>Watch how changing the nonce changes the entire hash!</p>
+
+            <div class="nonce-display">
+                <div>Current Nonce: <span id="currentNonce">0</span></div>
+            </div>
+
+            <button class="btn" onclick="incrementNonce()">🎲 Change Nonce (+1)</button>
+            <button class="btn" onclick="resetNonce()">🔄 Reset</button>
+
+            <div class="transaction-box">
+                <h3>📦 Block 2 Data:</h3>
+                <div>Previous: 082be7c9bbcd99fbc50625eaa3e7e39a34b150de49bd3bb25c4defbd10902613</div>
+                <div>Student 3 → Student 4: 70 BTC (fee: 0.9 BTC)</div>
+                <div>Student 4 → Student 5: 25 BTC (fee: 0.1 BTC)</div>
+                <div>Miner reward: 3.125 BTC</div>
+            </div>
+
+            <div class="output-section">
+                <h3>🔐 Block Hash with Nonce:</h3>
+                <div id="nonceHash" class="hash-display">Click "Change Nonce" to see different hashes!</div>
+            </div>
+
+            <div class="card">
+                <h3>✨ The Magic Explained:</h3>
+                <p>The nonce is a "number used once." Miners change this number to get different hashes until they find one that meets the target difficulty!</p>
+            </div>
+        </div>
+
+        <!-- Tab 4: Mine Block -->
+        <div id="tab4" class="tab-content">
+            <h2>⛏️ Mine a Bitcoin Block!</h2>
+            <p>Try to find a hash that starts with "0" - this is mining!</p>
+
+            <div class="nonce-display">
+                <div>Mining Nonce: <span id="mineNonce">0</span></div>
+            </div>
+
+            <div class="transaction-box">
+                <h3>📦 Block 3 to Mine:</h3>
+                <div>Student 2 → Teacher: 300 BTC (fee: 0.1 BTC)</div>
+                <div>Student 5 → Student 6: 20 BTC (fee: 0.8 BTC)</div>
+                <div>Miner reward: 3.125 BTC</div>
+            </div>
+
+            <button class="btn" onclick="tryMining()">⛏️ Try Mining!</button>
+            <button class="btn" onclick="resetMining()">🔄 Reset Mining</button>
+
+            <div class="output-section">
+                <h3>🎯 Target: Hash must start with "0"</h3>
+                <div id="miningHash" class="hash-display">Start mining to see the hash!</div>
+            </div>
+
+            <div id="winnerMessage" class="winner-message">
+                🎉 YES WE WON THE BLOCK! 🎉<br>
+                <span class="emoji">🏆💎🪙</span>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Mining Explained:</h3>
+                <p>In real Bitcoin, miners compete to find a hash that meets the difficulty target. The first one to find it wins the block reward! Our target is "0" at the start - much easier than real Bitcoin!</p>
+            </div>
+        </div>
+
+        <!-- Tab 5: Block Chain -->
+        <div id="tab5" class="tab-content">
+            <h2>⛓️ Mine the Blockchain</h2>
+            <p>Mine blocks one by one and watch the blockchain grow!</p>
+
+            <div class="card">
+                <h3>🔗 How It Works:</h3>
+                <p>Mine Block 1 first, then its hash becomes the "Previous Block" for Block 2. Keep mining to build the chain!</p>
+            </div>
+
+            <!-- Current Block to Mine -->
+            <div id="currentMiningBlock" class="transaction-box">
+                <h3>⛏️ Currently Mining: <span id="currentBlockNumber">Block 1</span></h3>
+                <div id="currentBlockData">
+                    Previous Block: Genesis<br>
+                    Runy → Student 1: 50 BTC (fee: 0.5 BTC)<br>
+                    Student 2 → Student 6: 40 BTC (fee: 0.8 BTC)<br>
+                    Miner reward: 3.125 BTC
+                </div>
+            </div>
+
+            <div class="nonce-display">
+                <div>Chain Nonce: <span id="chainNonce">0</span></div>
+            </div>
+
+            <button class="btn" onclick="mineChainBlock()">⛏️ Mine Current Block!</button>
+            <button class="btn" onclick="resetChain()">🔄 Reset Chain</button>
+
+            <div class="output-section">
+                <h3>🎯 Target: Hash must start with "0"</h3>
+                <div id="chainHash" class="hash-display">Start mining to see the hash!</div>
+            </div>
+
+            <div id="chainWinnerMessage" class="winner-message">
+                🎉 BLOCK MINED! 🎉<br>
+                <span class="emoji">⚡🔗💎</span>
+            </div>
+
+            <!-- Blockchain Display -->
+            <div class="block-chain" id="blockchainDisplay">
+                <!-- Blocks will appear here as they're mined -->
+            </div>
+
+            <div class="card">
+                <h3>🛡️ Security Through Linking:</h3>
+                <p>Each block's hash becomes part of the next block. This creates an unbreakable chain where changing any old block would require re-mining ALL blocks that follow!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
